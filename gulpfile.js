@@ -1,10 +1,10 @@
 // global requires
 var gulp = require('gulp');
 var pkg = require('./package.json');
+var bundlesDir = 'src/ux-components';
 
 //Path config
 var config = {
-	bundlesDir: 'bundles',
 	copy: {
 		src: ['**/*.png', '**/*.svg', '**/*.jpg', '**/*.gif', '**/fonts/*', '**/*.css']
 	},
@@ -20,10 +20,14 @@ var config = {
 	templates: {
 		src:['**/*.html', '**/*.ngtpl'],
 	},
+	datapacks: {
+		src: ['src/data-packs/**/*.html']
+	},
 	watch: {
-		styles: ['bundles/**/*.scss'],
-		scripts: ['bundles/**/*.js'],
-		templates: ['bundles/**/*.html', '**/*.ngtpl']
+		styles: [`${bundlesDir}/**/*.scss`],
+		scripts: [`${bundlesDir}/**/*.js`],
+		templates: [`${bundlesDir}/**/*.html`, '**/*.ngtpl'],
+		datapacks: ['src/data-packs/**/*.html']
 	},
 	dest: 'resource-bundles',
 	build: 'build'
@@ -31,18 +35,29 @@ var config = {
 
 // Default task
 gulp.task('default', ['sass', 'uglify', 'templates', 'copy', 'connect', 'watch']);
+gulp.task('dev', ['devMode', 'sass', 'uglify', 'templates', 'devUglify', 'copy', 'connect', 'watch']);
 
 //Public tasks
 // gulp.task('bower', bower);
 gulp.task('copy', copy);
 gulp.task('connect', connect);
+gulp.task('devMode', devMode);
 gulp.task('sass', sass);
 gulp.task('templates', templates)
+gulp.task('datapackTemplates', datapackTemplates)
 gulp.task('uglify', uglify);
+gulp.task('devUglify', ['datapackTemplates'], uglify);
 gulp.task('watch', watch);
 gulp.task('zip', zip);
 
 //Method definitions
+
+function devMode() {
+	console.log('devMode');
+	config.scripts.src.push('../../../dev/*.js');
+	
+	gulp.watch(config.watch.datapacks, ['datapackTemplates', 'devUglify']);
+}
 
 function bower() {
 	// UNUSED
@@ -84,7 +99,7 @@ function connect() {
 function copy() {
 	bundle(config.copy.src, (src, dest) => {
 		return gulp.src(src)
-		.pipe(gulp.dest(config.build))
+			.pipe(gulp.dest(config.build))
 			.pipe(gulp.dest(`${config.dest}/${pkg.name_space ? pkg.name_space + '_' : ''}${dest}.resource`));
 	});
 }
@@ -122,13 +137,29 @@ function templates() {
 	bundle(config.templates.src, (src, dest) => {
 	  return gulp.src(src)
 	    .pipe(plumber({errorHandler: onError}))
-			.pipe(rename({dirname: ''}))
+		.pipe(rename({dirname: ''}))
 	    .pipe(templatecache({standalone: true, module: `${dest}-templates`}))
 	    .pipe(concat(dest + '.templates.min.js'))
 			.pipe(uglify({mangle: false}))
 			.pipe(gulp.dest(config.build))
 	    .pipe(gulp.dest(`${config.dest}/${pkg.name_space ? pkg.name_space + '_' : ''}${dest}.resource`));
 	});
+}
+
+function datapackTemplates() {
+	var concat = require('gulp-concat');
+	var plumber = require('gulp-plumber');
+	var rename = require('gulp-rename');
+	var templatecache = require('gulp-angular-templatecache');
+	var uglify = require('gulp-uglify');
+
+	return gulp.src(config.datapacks.src)
+		.pipe(plumber({errorHandler: onError}))
+		.pipe(rename({dirname: 'dev', extname: ''}))
+		.pipe(templatecache({standalone: false, module: 'vlocTemplates'}))
+		.pipe(concat('datapacks.templates.min.js'))
+		.pipe(uglify({mangle: false}))
+		.pipe(gulp.dest(config.build));
 }
 
 function uglify() {
@@ -139,21 +170,20 @@ function uglify() {
 		var rename = require('gulp-rename');
 		var sourcemaps = require('gulp-sourcemaps');
 		var uglify = require('gulp-uglify');
+		
 
 		bundle(config.scripts.src, (src, dest) => {
+		console.log(src);
 			return gulp.src(src)
 				.pipe(plumber({errorHandler: onError}))
 				.pipe(include({
 					extensions: 'js',
-					includePaths: ['bower_components']
+					includePaths: ['bower_components','./']
 				}))
 				.pipe(sourcemaps.init())
 				.pipe(concat(dest + '.min.js'))
 				.pipe(uglify())
-				.pipe(sourcemaps.write({
-					includeContent: false,
-					sourceRoot: `/bundles/${dest}/`
-				}))
+				.pipe(sourcemaps.write('./'))
 				.pipe(gulp.dest(config.build))
 				.pipe(gulp.dest(`${config.dest}/${pkg.name_space ? pkg.name_space + '_' : ''}${dest}.resource`));
 	});
@@ -173,6 +203,7 @@ function watch() {
 	gulp.watch(config.watch.styles, ['sass']);
 	gulp.watch(config.watch.scripts, ['uglify']);
 	gulp.watch(config.watch.templates, ['templates']);
+	// gulp.watch(config.watch.datapacks, ['datapackTemplates']);
 	// NOTE: we could work in live-reload or browser-sync here
 }
 
@@ -197,7 +228,7 @@ function getDirectories(srcpath) {
   });
 }
 
-function bundle(src, cb, bundledDir = config.bundlesDir) {
+function bundle(src, cb, bundledDir = bundlesDir) {
 	var path = require('path');
 	var bundles = getDirectories(bundledDir);
 	bundles.map(function(bundle) {
@@ -210,7 +241,6 @@ function bundle(src, cb, bundledDir = config.bundlesDir) {
 		} else {
 			srcglob = path.join(bundledDir, bundle, src);
 		}
-		console.log(srcglob);
 		cb(srcglob, bundle);
 	});
 }
