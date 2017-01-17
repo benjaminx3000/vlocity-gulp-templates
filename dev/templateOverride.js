@@ -1,5 +1,5 @@
-//=require ../build/datapacks.templates.min.js
 +function () {
+    console.log('template override loaded');
     angular
         .module('vlocTemplates')
         .config(configBlock);
