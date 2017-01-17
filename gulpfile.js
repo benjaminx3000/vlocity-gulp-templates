@@ -3,6 +3,9 @@ var gulp = require('gulp');
 var pkg = require('./package.json');
 var bundlesDir = 'src/ux-components';
 
+// Tasks
+require('./gulpfile.cards.js');
+
 //Path config
 var config = {
 	copy: {
@@ -35,29 +38,20 @@ var config = {
 
 // Default task
 gulp.task('default', ['sass', 'uglify', 'templates', 'copy', 'connect', 'watch']);
-gulp.task('dev', ['devMode', 'sass', 'uglify', 'templates', 'devUglify', 'copy', 'connect', 'watch']);
+gulp.task('build', ['sass', 'uglify', 'templates', 'copy']);
 
 //Public tasks
 // gulp.task('bower', bower);
+gulp.task('clean', clean);
 gulp.task('copy', copy);
 gulp.task('connect', connect);
-gulp.task('devMode', devMode);
 gulp.task('sass', sass);
 gulp.task('templates', templates)
-gulp.task('datapackTemplates', datapackTemplates)
 gulp.task('uglify', uglify);
-gulp.task('devUglify', ['datapackTemplates'], uglify);
 gulp.task('watch', watch);
 gulp.task('zip', zip);
 
 //Method definitions
-
-function devMode() {
-	console.log('devMode');
-	config.scripts.src.push('../../../dev/*.js');
-	
-	gulp.watch(config.watch.datapacks, ['datapackTemplates', 'devUglify']);
-}
 
 function bower() {
 	// UNUSED
@@ -80,6 +74,11 @@ function bower() {
       .pipe(concat('libs.js'))
       .pipe(gulp.dest(config.libs.dest));
 };
+
+function clean(cb) {
+	var del = require('del');
+	del(config.build, cb);
+}
 
 // NOTE: In order to use proxly in conjunction with salesforce
 // we're setting conntect's method to https here.
@@ -146,22 +145,6 @@ function templates() {
 	});
 }
 
-function datapackTemplates() {
-	var concat = require('gulp-concat');
-	var plumber = require('gulp-plumber');
-	var rename = require('gulp-rename');
-	var templatecache = require('gulp-angular-templatecache');
-	var uglify = require('gulp-uglify');
-
-	return gulp.src(config.datapacks.src)
-		.pipe(plumber({errorHandler: onError}))
-		.pipe(rename({dirname: 'dev', extname: ''}))
-		.pipe(templatecache({standalone: false, module: 'vlocTemplates'}))
-		.pipe(concat('datapacks.templates.min.js'))
-		.pipe(uglify({mangle: false}))
-		.pipe(gulp.dest(config.build));
-}
-
 function uglify() {
 		var concat = require('gulp-concat');
 		var include = require('gulp-include');
@@ -210,10 +193,11 @@ function watch() {
 function onError(err) {
 		var notify = require('gulp-notify');
 		notify.onError({
-				title:		'Gulp',
-				subtitle: 'Failure!',
-				message:	'Error: <%= error.message %>'
+			title:'Gulp',
+			subtitle: 'Failure!',
+			message:'Error: <%= error.message %>'
 		})(err);
+		console.log(err);
 		this.emit('end');
 };
 

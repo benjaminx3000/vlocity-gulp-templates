@@ -26,3 +26,11 @@ build/Release
 # Dependency directory
 # https://docs.npmjs.com/misc/faq#should-i-check-my-node-modules-folder-into-git
 node_modules
+
+
+.vscode
+force.json
+build
+resource-bundles
+**/*_AllRelationshipKeys.json
+src/data-packs/VlocityUITemplate/**/*.css
