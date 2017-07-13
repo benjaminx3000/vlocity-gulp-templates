@@ -1,0 +1,44 @@
+[
+  {
+    "creationDate": 1499785804935,
+    "description": "",
+    "id": "Replace_1499785804935",
+    "name": "Cards",
+    "pairs": [
+      {
+        "from": "/https.*/resource(/[0-9]+)?.*__CardFramework$/gi",
+        "source": {
+          "key": "Url",
+          "operator": "Contains",
+          "value": ""
+        },
+        "status": "Inactive",
+        "to": "https://localhost:3001/build/framework.js"
+      }
+    ],
+    "ruleType": "Replace",
+    "status": "Active",
+    "version": 2
+  },
+  {
+    "creationDate": 1499780403334,
+    "description": "",
+    "id": "Replace_1499780403334",
+    "name": "VS Static Resources",
+    "pairs": [
+      {
+        "from": "/https.*\\/resource\\/[0-9]+\\/vs_.*\\//gi",
+        "source": {
+          "key": "Url",
+          "operator": "Contains",
+          "value": "visual.force.com"
+        },
+        "status": "Inactive",
+        "to": "https://localhost:3000/build/"
+      }
+    ],
+    "ruleType": "Replace",
+    "status": "Active",
+    "version": 2
+  }
+]

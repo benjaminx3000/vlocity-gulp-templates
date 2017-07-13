@@ -165,7 +165,7 @@ function uglify() {
 				}))
 				.pipe(sourcemaps.init())
 				.pipe(concat(dest + '.min.js'))
-				.pipe(uglify())
+				// .pipe(uglify())
 				.pipe(sourcemaps.write('./'))
 				.pipe(gulp.dest(config.build))
 				.pipe(gulp.dest(`${config.dest}/${pkg.name_space ? pkg.name_space + '_' : ''}${dest}.resource`));

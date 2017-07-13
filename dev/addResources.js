@@ -1,4 +1,12 @@
 +function() {
+    if (window.location.search) {
+        if (!/useCache=false/.test(window.location.search)) {
+            window.location.search += '&useCache=false';
+            return;
+        }
+    } else {
+        window.location.search += '?useCache=false';
+    }
     var scripts = document.createElement('script');
     var overrides = document.createElement('script');
     var templates = document.createElement('script');

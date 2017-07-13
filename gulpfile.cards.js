@@ -36,12 +36,16 @@ function onCardError(err) {
 
 function cardConnect() {
 	var connect = require('gulp-connect');
+	var cors = require('cors');
 
 	connect.server({
 		root: './',
 		https: true,
 		debug: true,
-		port: 3001
+		port: 3001,
+		middleware: function(connect, opt) {
+			return [cors()];
+		}
 	})
 }
 
@@ -119,4 +123,5 @@ function cardWatch() {
 	gulp.watch(config.datapacks.sass, ['cardSass']);
 	gulp.watch(config.datapacks.javaScripts, ['cardJS']);
 	gulp.watch(config.datapacks.templates, ['devPrepare']);
+	gulp.watch('dev/**/*.js', ['devPrepare']);
 }
