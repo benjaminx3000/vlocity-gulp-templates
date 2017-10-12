@@ -31,8 +31,9 @@ node_modules
 .vscode
 force.json
 *.force.json
-*.
+*.properties
 build
+
 resource-bundles
 **/*_AllRelationshipKeys.json
 src/data-packs/VlocityUITemplate/**/*.css
