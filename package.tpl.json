@@ -1,8 +1,5 @@
 {
   "name_space": "vs",
-  "version": "1.0.0",
-  "repository": "bitbucket.org:vlocityservice/metlife-lucy2",
-  "description": "README.md",
   "scripts": {
     "clean": "echo \"Cleaining build dir\" && gulp clean",
     "develop": "npm run clean && echo \"Watching Static Resources and Cards\" && gulp & gulp cards",
