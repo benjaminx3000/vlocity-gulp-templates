@@ -30,6 +30,8 @@ node_modules
 
 .vscode
 force.json
+*.force.json
+*.
 build
 resource-bundles
 **/*_AllRelationshipKeys.json

@@ -1,0 +1,19 @@
+
+projectPath: ../svc_nyl # Where the project will be contained. use . for this folder
+expansionPath: src # The Path relative to the vlocity.dataPacksJobFolder to insert the expanded files
+compileOnBuild: true # Compiled files will not be generated as part of this Export
+ignoreAllErrors: true
+preJobApex:
+  Deploy: DeactivateTemplatesAndLayouts.cls
+manifestOnly: true # If true, an Export job will only save items specifically listed in the manifest
+manifest: # Object defining Type and Export Data - Can be String or Object
+    # VlocityCard:
+  # VlocityUILayout:
+  # VlocityUITemplate:
+# queries:
+  # - VlocityDataPackType: VlocityUITemplate
+    # query: Select Id from %vlocity_namespace%__VlocityUITemplate__c where Name LIKE 'svc-%'
+
+    
+delete: true # Delete the VlocityDataPack__c file on finish
+activate: true # Will Activate everything after it is imported / deployed
