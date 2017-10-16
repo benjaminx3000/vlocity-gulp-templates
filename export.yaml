@@ -1,5 +1,5 @@
 
-projectPath: ../svc_nyl # Where the project will be contained. use . for this folder
+projectPath: ../{{this_project}} # Where the project will be contained. use . for this folder
 expansionPath: src # The Path relative to the vlocity.dataPacksJobFolder to insert the expanded files
 # compileOnBuild: true # Compiled files will not be generated as part of this Export
 ignoreAllErrors: true
