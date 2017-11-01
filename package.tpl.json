@@ -1,11 +1,11 @@
 {
-  "name_space": "vs",
+  "name_space": "vsrv",
   "scripts": {
     "clean": "echo \"Cleaining build dir\" && gulp clean",
     "develop": "npm run clean && echo \"Watching Static Resources and Cards\" && gulp & gulp cards",
     "build": "npm run clean && echo \"Building static resources\" && gulp build && gulp zip",
-    "export": "echo \"Running Export\" && grunt packExport --base {{vlocity_build}} --gruntfile {{vlocity_build}}/Gruntfile.js -job=export -propertyfile=../{{this_project}}/build.properties",
-    "deploy": "echo \"Running Deploy\" && grunt packDeploy --base {{vlocity_build}} --gruntfile {{vlocity_build}}/Gruntfile.js -job=deploy -propertyfile=../{{this_project}}/build.properties"
+    "export": "echo \"Running Export\" && grunt packExport --base {{vlocity_build}} --gruntfile {{vlocity_build}}/Gruntfile.js -job=manifest -propertyfile=../{{this_project}}/build.properties",
+    "deploy": "echo \"Running Deploy\" && grunt packDeploy --base {{vlocity_build}} --gruntfile {{vlocity_build}}/Gruntfile.js -job=manifest -propertyfile=../{{this_project}}/build.properties"
   },
   "devDependencies": {
     "cors": "^2.8.3",

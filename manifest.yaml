@@ -1,0 +1,10 @@
+projectPath: ../{{this_project}}
+expansionPath: src
+compileOnBuild: true
+ignoreAllErrors: false
+preJobApex:
+  Deploy: DeactivateTemplatesAndLayouts.cls
+manifestOnly: true
+manifest:
+delete: true
+activate: true
