@@ -11,7 +11,7 @@ gulp.task('devPrepare', ['cardTemplates'], devPrepare);
 gulp.task('cards', ['devPrepare', 'cardJS', 'cardSass', 'cardConnect', 'cardWatch'])
 
 var config = {};
-config.frameWorkSrc = 'dev/vlocity_ins__CardFramework.js';
+config.frameWorkSrc = 'dev/{{vlocity_namespace}}__CardFramework.js';
 config.datapacks = {};
 config.datapacks.expansionPath = 'src/data-packs';
 config.datapacks.buildPath = 'build';
